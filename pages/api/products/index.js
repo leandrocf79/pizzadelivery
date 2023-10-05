@@ -13,7 +13,14 @@ export default async function handler(req, res) {
       const products = await Product.find();
       res.status(200).json(products);
     } catch (err) {
+      console.log('TESTE 15 ')
+      console.error('Err: ', err);
+      
+
       res.status(500).json(err);
+      console.log('TESTE 16 ')
+      console.error('Err: ', err);
+      
     }
   }
 
@@ -25,7 +32,10 @@ export default async function handler(req, res) {
       const product = await Product.create(req.body);
       res.status(201).json(product);
     } catch (err) {
+      console.log('TESTE 17 ')
       res.status(500).json(err);
+      console.error('Erro mongo.js: ', err);
+      console.log('TESTE 18 ')
     }
   }
 }

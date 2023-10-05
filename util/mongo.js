@@ -1,4 +1,4 @@
-import mongoose from 'mongoose'
+import mongoose from 'mongoose';
 
 const MONGO_URL = process.env.MONGO_URL
 
@@ -8,16 +8,45 @@ if (!MONGO_URL) {
   )
 }
 
+
+
+async function dbConnect() {
+  if (mongoose.connection.readyState === 1) {
+    return;
+  }
+
+  try {
+    await mongoose.connect(MONGO_URL, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
+  } catch (error) {
+    
+    console.error('Erro ao conectar ao MongoDB:', error);
+  }
+}
+
+export default dbConnect;
+
+
+
+
+
+
+
 /**
  * Global is used here to maintain a cached connection across hot reloads
  * in development. This prevents connections growing exponentially
  * during API Route usage.
  */
+
+/**
 let cached = global.mongoose
 
 if (!cached) {
   cached = global.mongoose = { conn: null, promise: null }
 }
+
 
 async function dbConnect() {
   if (cached.conn) {
@@ -38,3 +67,5 @@ async function dbConnect() {
 }
 
 export default dbConnect
+
+*/

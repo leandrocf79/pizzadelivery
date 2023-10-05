@@ -11,13 +11,14 @@ import axios from "axios";
 import { useRouter } from "next/router";
 import { reset } from "../redux/cartSlice";
 import OrderDetail from "../components/OrderDetail";
+import React, { forwardRef } from 'react';
 
 const Cart = () => {
   const cart = useSelector((state) => state.cart);
   const [open, setOpen] = useState(false);
   const [cash, setCash] = useState(false);
   const amount = cart.total;
-  const currency = "USD";
+  const currency = "BRL";
   const style = { layout: "vertical" };
   const dispatch = useDispatch();
   const router = useRouter();
@@ -30,17 +31,25 @@ const Cart = () => {
         router.push(`/orders/${res.data._id}`);
       }
     } catch (err) {
-      console.log(err);
+      console.error(err);
     }
+  };
+
+  // Defina as opções do PayPalScriptProvider apenas uma vez fora do componente ButtonWrapper
+  const paypalOptions = {
+    "client-id":
+      "Ae3tcnVp7gYuFpYVdydvMaoLYD2jqVszVkdY1lydru4xJfDXsjKn1TCj7FTwzyfGMrbyZVRURQ6lUriL",
+    components: "buttons, messages",
+    currency: "BRL",
+    // ...
   };
 
   // Custom component to wrap the PayPalButtons and handle currency changes
   const ButtonWrapper = ({ currency, showSpinner }) => {
-    // usePayPalScriptReducer can be use only inside children of PayPalScriptProviders
-    // This is the main reason to wrap the PayPalButtons in a new component
     const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
 
     useEffect(() => {
+      // Defina as opções do PayPalScriptProvider apenas uma vez
       dispatch({
         type: "resetOptions",
         value: {
@@ -48,7 +57,7 @@ const Cart = () => {
           currency: currency,
         },
       });
-    }, [currency, showSpinner]);
+    }, [currency, dispatch, options, showSpinner]);
 
     return (
       <>
@@ -71,7 +80,7 @@ const Cart = () => {
                 ],
               })
               .then((orderId) => {
-                // Your code here after create the order
+                // Seu código aqui após criar o pedido
                 return orderId;
               });
           }}
@@ -153,6 +162,9 @@ const Cart = () => {
           <div className={styles.totalText}>
             <b className={styles.totalTextTitle}>Discount:</b>$0.00
           </div>
+          <PayPalScriptProvider options={paypalOptions}>
+            <ButtonWrapper currency={currency} showSpinner={false} />
+          </PayPalScriptProvider>
           <div className={styles.totalText}>
             <b className={styles.totalTextTitle}>Total:</b>${cart.total}
           </div>
@@ -165,15 +177,14 @@ const Cart = () => {
                 CASH ON DELIVERY
               </button>
               <PayPalScriptProvider
-                options={{
-                  "client-id":
-                    "ATTL8fDJKfGzXNH4VVuDy1qW4_Jm8S0sqmnUTeYtWpqxUJLnXIn90V8YIGDg-SNPaB70Hg4mko_fde4-",
-                  components: "buttons",
-                  currency: "USD",
-                  "disable-funding": "credit,card,p24",
-                }}
+                options={paypalOptions}
               >
                 <ButtonWrapper currency={currency} showSpinner={false} />
+                <PayPalButtons
+                  style={style}
+                  onError={(err) => console.error(err)}
+                  // ...outras props do botão
+                />
               </PayPalScriptProvider>
             </div>
           ) : (

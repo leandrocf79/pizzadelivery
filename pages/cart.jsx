@@ -18,7 +18,7 @@ const Cart = () => {
   const [open, setOpen] = useState(false);
   const [cash, setCash] = useState(false);
   const amount = cart.total;
-  const currency = "BRL";
+  const currency = "USD";
   const style = { layout: "vertical" };
   const dispatch = useDispatch();
   const router = useRouter();
@@ -34,30 +34,42 @@ const Cart = () => {
       console.error(err);
     }
   };
-
+  
   // Defina as opções do PayPalScriptProvider apenas uma vez fora do componente ButtonWrapper
+  //'EH_u-GGUmBEvfrW09XAeBT83t2-M9AlnmvLwemA06KnKuEdd-ZXkOL3gnDTK0vby2blU4gkU9cbpd9UE',
   const paypalOptions = {
-    "client-id":
-      "Ae3tcnVp7gYuFpYVdydvMaoLYD2jqVszVkdY1lydru4xJfDXsjKn1TCj7FTwzyfGMrbyZVRURQ6lUriL",
+    "client-id": process.env.PAYPAL_CLIENT_ID, 
     components: "buttons, messages",
-    currency: "BRL",
-    // ...
+    currency: "USD"
+    
   };
+  if (!paypalOptions["client-id"]) {
+    console.error("Erro: A variável de ambiente PAYPAL_CLIENT_ID não está definida ou está configurada incorretamente.");
+    // Você também pode lançar um erro para parar a execução do programa, se preferir.
+    // throw new Error("A variável de ambiente PAYPAL_CLIENT_ID não está definida ou está configurada incorretamente.");
+  }
 
   // Custom component to wrap the PayPalButtons and handle currency changes
   const ButtonWrapper = ({ currency, showSpinner }) => {
     const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
 
     useEffect(() => {
+
+      const updatedOptions = {
+        ...options,
+        currency: currency,
+      };
       // Defina as opções do PayPalScriptProvider apenas uma vez
-      dispatch({
-        type: "resetOptions",
-        value: {
-          ...options,
-          currency: currency,
-        },
-      });
-    }, [currency, dispatch, options, showSpinner]);
+      // Verifique se as opções foram alteradas antes de chamar o dispatch
+      if (updatedOptions.currency !== options.currency) {
+        dispatch({
+          type: "resetOptions",
+          value: updatedOptions,
+        });
+      }
+      // DEIXAR ESSE COMETÁRIO ABAIXO PARA EVITAR LOOP EM CASO DE ERRO:
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [currency, options]);
 
     return (
       <>
@@ -162,9 +174,7 @@ const Cart = () => {
           <div className={styles.totalText}>
             <b className={styles.totalTextTitle}>Discount:</b>$0.00
           </div>
-          <PayPalScriptProvider options={paypalOptions}>
-            <ButtonWrapper currency={currency} showSpinner={false} />
-          </PayPalScriptProvider>
+          
           <div className={styles.totalText}>
             <b className={styles.totalTextTitle}>Total:</b>${cart.total}
           </div>
@@ -182,7 +192,7 @@ const Cart = () => {
                 <ButtonWrapper currency={currency} showSpinner={false} />
                 <PayPalButtons
                   style={style}
-                  onError={(err) => console.error(err)}
+                  onError={(err) => console.error("Erro ao carregar botão do PayPal:", err)}
                   // ...outras props do botão
                 />
               </PayPalScriptProvider>
@@ -192,6 +202,7 @@ const Cart = () => {
               CHECKOUT NOW!
             </button>
           )}
+          
         </div>
       </div>
       {cash && <OrderDetail total={cart.total} createOrder={createOrder} />}

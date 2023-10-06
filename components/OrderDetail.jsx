@@ -16,14 +16,14 @@ const OrderDetail = ({ total, createOrder }) => {
         <div className={styles.item}>
           <label className={styles.label}>Name Surname</label>
           <input
-            placeholder="John Doe"
+            placeholder="Nome e sobrenomes"
             type="text"
             className={styles.input}
             onChange={(e) => setCustomer(e.target.value)}
           />
         </div>
         <div className={styles.item}>
-          <label className={styles.label}>Phone Number</label>
+          <label className={styles.label}>WhatsApp</label>
           <input
             type="text"
             placeholder="+1 234 567 89"

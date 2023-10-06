@@ -4,6 +4,8 @@ import { useState } from "react";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { addProduct } from "../../redux/cartSlice";
+import { useRouter } from 'next/router';
+
 
 const Product = ({ pizza }) => {
   const [price, setPrice] = useState(pizza.prices[0]);
@@ -11,7 +13,7 @@ const Product = ({ pizza }) => {
   const [quantity, setQuantity] = useState(1);
   const [extras, setExtras] = useState([]);
   const dispatch = useDispatch();
-
+  const router = useRouter();
   const changePrice = (number) => {
     setPrice(price + number);
   };
@@ -36,6 +38,9 @@ const Product = ({ pizza }) => {
 
   const handleClick = () => {
     dispatch(addProduct({...pizza, extras, price, quantity}));
+
+    // Redirecionar para a página do carrinho após o dispatch
+    router.push('/cart');
   };
 
   return (

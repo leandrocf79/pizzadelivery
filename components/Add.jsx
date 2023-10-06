@@ -31,7 +31,7 @@ const Add = ({ setClose }) => {
     data.append("upload_preset", "uploads");
     try {
       const uploadRes = await axios.post(
-        "https://api.cloudinary.com/v1_1/dsbyq4sj1/image/upload",
+        "https://api.cloudinary.com/v1_1/pizzaria/image/upload",
         data
       );
 
@@ -47,6 +47,7 @@ const Add = ({ setClose }) => {
       await axios.post("http://localhost:3000/api/products", newProduct);
       setClose(true);
     } catch (err) {
+      console.error('Erro Add.jsx: ', err);
       console.log(err);
     }
   };
@@ -131,7 +132,7 @@ const Add = ({ setClose }) => {
           </div>
         </div>
         <button className={styles.addButton} onClick={handleCreate}>
-          Create
+          Criar nova pizza
         </button>
       </div>
     </div>

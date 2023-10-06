@@ -1,31 +1,37 @@
 .container {
   padding: 50px;
   display: flex;
+  flex-wrap: wrap; /* Para que os elementos dentro do container possam quebrar para a próxima linha em telas pequenas */
 }
 
 .left {
   flex: 2;
+  min-width: 0; /* Adicione isso para evitar que a imagem dentro do .left fique fora dos limites */
 }
 
 .right {
   flex: 1;
+  min-width: 0; /* Adicione isso para evitar que o botão de pagamento fique fora dos limites */
 }
 
 .imgContainer {
   width: 100px;
   height: 100px;
   position: relative;
+  overflow: hidden; /* Para garantir que a imagem não saia dos limites */
 }
 
 .table {
   width: 100%;
   border-spacing: 20px;
+  margin-top: 20px; /* Adicione um espaço superior para separar a tabela dos outros elementos */
 }
 
 .name {
   font-weight: 500;
   color: #d1411e;
   font-size: 18px;
+  margin-bottom: 5px; /* Adicione um espaço inferior entre os nomes dos produtos */
 }
 
 .total {
@@ -35,19 +41,21 @@
 
 .wrapper {
   width: 90%;
-  max-height: 300px;
-  background-color: #333;
-  padding: 50px;
-  padding-top: 10px;
+  max-height: 600px;
+  background-color: #fdfdfd;
+  padding: 20px; /* Reduza o preenchimento para tornar o conteúdo mais compacto */
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  color: white;
+  color: rgb(6, 6, 6);
+  margin-top: 20px; /* Adicione um espaço superior para separar o conteúdo da parte superior */  
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2); /* Adicione uma sombra sutil */  
 }
 
 .totalTextTitle {
-  margin-right: 10px;
+  margin-right: 10px; 
 }
+
 
 .button {
   height: 30px;
@@ -55,7 +63,37 @@
   font-weight: bold;
   cursor: pointer;
   margin-top: 20px;
+  background-color: white;
+  padding: 5px 10px; /* Adicione preenchimento para tornar o botão mais clicável */
+  border: 2px solid #d1411e; /* Adicione uma borda sólida */
+  border-radius: 5px; /* Adicione borda arredondada */
+  transition: background-color 0.3s, color 0.3s; /* Adicione uma transição suave nas cores */
 }
+
+
+.button:hover {
+  background-color: #d1411e;
+  color: white;
+}
+
+.buttonAddItens{
+  height: 30px;
+  color: teal; 
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 20px;
+  background-color: white;
+  padding: 5px 10px; /* Adicione preenchimento para tornar o botão mais clicável */
+  border: 2px solid teal;  /* Adicione uma borda sólida */
+  border-radius: 5px; /* Adicione borda arredondada */
+  transition: background-color 0.3s, color 0.3s; /* Adicione uma transição suave nas cores */
+}
+.buttonAddItens:hover {
+  background-color: teal;
+  color: white;
+}
+
+
 
 @media screen and (max-width: 480px) {
   .container {
@@ -98,16 +136,10 @@
     font-size: 22px;
   }
 
-  .price::before {
-    content: "Price: ";
-    font-weight: 500;
-  }
-  .quantity::before {
-    content: "Quantity: ";
-    font-weight: 500;
-  }
+  .price::before,
+  .quantity::before,
   .total::before {
-    content: "Total: ";
+    content: attr(data-label);
     font-weight: 500;
   }
 
@@ -129,4 +161,6 @@
   background-color: white;
   color: teal;
   font-weight: bold;
+  border-radius: 5px;
+  margin-bottom: 20px;
 }

@@ -14,6 +14,11 @@ import OrderDetail from "../components/OrderDetail";
 import React, { forwardRef } from 'react';
 
 const Cart = () => {
+  // LOCALSTORAGE
+ 
+
+  const [homePg, setHomePg] = useState(false);
+
   const cart = useSelector((state) => state.cart);
   const [open, setOpen] = useState(false);
   const [cash, setCash] = useState(false);
@@ -38,9 +43,11 @@ const Cart = () => {
   // Defina as opções do PayPalScriptProvider apenas uma vez fora do componente ButtonWrapper
   //'EH_u-GGUmBEvfrW09XAeBT83t2-M9AlnmvLwemA06KnKuEdd-ZXkOL3gnDTK0vby2blU4gkU9cbpd9UE',
   const paypalOptions = {
-    "client-id": process.env.PAYPAL_CLIENT_ID, 
+    
     components: "buttons, messages",
-    currency: "USD"
+    currency: "USD",
+  
+    
     
   };
   if (!paypalOptions["client-id"]) {
@@ -70,6 +77,8 @@ const Cart = () => {
       // DEIXAR ESSE COMETÁRIO ABAIXO PARA EVITAR LOOP EM CASO DE ERRO:
       // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [currency, options]);
+
+    
 
     return (
       <>
@@ -178,29 +187,41 @@ const Cart = () => {
           <div className={styles.totalText}>
             <b className={styles.totalTextTitle}>Total:</b>${cart.total}
           </div>
-          {open ? (
+          
+          
+          {open && amount>0 ? (
+            <>
+            
+            <PayPalScriptProvider  options={paypalOptions} >
+                
+              <ButtonWrapper currency={currency} showSpinner={false}  />  
+                  
+            </PayPalScriptProvider>
+            
             <div className={styles.paymentMethods}>
-              <button
+              
+              <button                
                 className={styles.payButton}
                 onClick={() => setCash(true)}
               >
-                CASH ON DELIVERY
+                Pagar na entrega
               </button>
-              <PayPalScriptProvider
-                options={paypalOptions}
-              >
-                <ButtonWrapper currency={currency} showSpinner={false} />
-                <PayPalButtons
-                  style={style}
-                  onError={(err) => console.error("Erro ao carregar botão do PayPal:", err)}
-                  // ...outras props do botão
-                />
-              </PayPalScriptProvider>
+              
+            
             </div>
-          ) : (
-            <button onClick={() => setOpen(true)} className={styles.button}>
-              CHECKOUT NOW!
+            
+            </>
+          ) : ( 
+            <>          
+            <button  onClick={() => setOpen(true)} className={styles.button}>
+              Finalizar pedido
             </button>
+            <button  onClick={() => { 
+              // Redirecionar para a página home
+              router.push('/'); }}   className={styles.buttonAddItens}>
+            Adicionar mais itens
+          </button>
+          </> 
           )}
           
         </div>

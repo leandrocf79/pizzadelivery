@@ -18,9 +18,10 @@ export default function Home({ pizzaList, admin }) {
     <div className={styles.container}>
       
       <Head>
+        <meta httpEquiv="content-language" content="pt-BR" /> 
         <title>Pizza Restaurant</title>
         <meta name="description" content="Best pizza shop in town" />
-        <meta httpEquiv="content-language" content="pt-BR" /> 
+        
         
         <link rel="icon" href="/favicon.ico" />
       </Head>

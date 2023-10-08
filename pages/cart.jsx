@@ -12,6 +12,8 @@ import { useRouter } from "next/router";
 import { reset } from "../redux/cartSlice";
 import OrderDetail from "../components/OrderDetail";
 import React, { forwardRef } from 'react';
+import { preFillCart } from "redux"
+
 
 const Cart = () => {
   
@@ -63,16 +65,33 @@ const Cart = () => {
       console.error(err);
     }
   };
+
+
+  // Para garantir a exibição das opçoes de pagamento
+  const [isPayPalButtonLoaded, setIsPayPalButtonLoaded] = useState(false);
+  useEffect(() => {
+    const fetchData = async () => {
+      // Simule o carregamento das opções do PayPal
+      await new Promise((resolve) => setTimeout(resolve, 5000)); // 3 segundos
+      setIsPayPalButtonLoaded(true);
+    };
+
+    fetchData();
+  }, []);
+
+
+
+
   // Defina as opções do PayPalScriptProvider apenas uma vez fora do componente ButtonWrapper
   //'EH_u-GGUmBEvfrW09XAeBT83t2-M9AlnmvLwemA06KnKuEdd-ZXkOL3gnDTK0vby2blU4gkU9cbpd9UE',
   const paypalOptions = {
     
-    components: "buttons, messages",
+    components: "buttons",
     currency: "USD",
-    "disable-funding": "p24" // Desativar tipos de pagamentos ou:
-
-    
+    "disable-funding": "card",
   };
+
+
   if (!paypalOptions["client-id"]) {
     console.error("Erro: A variável de ambiente PAYPAL_CLIENT_ID não está definida ou está configurada incorretamente.");
     // Você também pode lançar um erro para parar a execução do programa, se preferir.
@@ -150,11 +169,11 @@ const Cart = () => {
         <table className={styles.table}>
           <tbody>
             <tr className={styles.trTitle}>
-              <th>Product</th>
-              <th>Name</th>
+              <th>Produto</th>
+              <th>Nome</th>
               <th>Extras</th>
-              <th>Price</th>
-              <th>Quantity</th>
+              <th>Preço</th>
+              <th>Qtd</th>
               <th>Total</th>
             </tr>
           </tbody>
@@ -199,25 +218,42 @@ const Cart = () => {
       </div>
       <div className={styles.right}>
         <div className={styles.wrapper}>
-          <h2 className={styles.title}>CART TOTAL</h2>
+          <h2 className={styles.title}>Finalizar pedido</h2>
+          
           <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Subtotal:</b>${cart.total}
-          </div>
-          <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Discount:</b>$0.00
+            <b className={styles.totalTextTitle}>Subtotal:</b>R${cart.total}
           </div>
           
           <div className={styles.totalText}>
-            <b className={styles.totalTextTitle}>Total:</b>${cart.total}
+            <b className={styles.totalTextTitle}>Taxa de entrega:</b>R$5,00
+          </div>
+          <div className={styles.totalText}>
+            <span>
+              <b className={styles.totalTextTitle} style={{ fontWeight: 'bold', color: 'black' }}>Desconto:</b>
+              <span style={{ color: 'red' }}>- R$5,00</span>
+            </span>
+          </div>
+                    
+          <div className={styles.totalText}>
+            <b className={styles.totalTextTitle}>Total:</b>R${cart.total}
           </div>
           
-          onChange=
+          
           {open && amount>0 ? (
             <>
-
-              <PayPalScriptProvider  options={paypalOptions}  >                  
-                <ButtonWrapper currency={currency} showSpinner={true}  />                      
-              </PayPalScriptProvider>
+              {isPayPalButtonLoaded ? (
+                <PayPalScriptProvider  options={paypalOptions}  > 
+                    <ButtonWrapper currency={currency} showSpinner={true} />
+                  </PayPalScriptProvider>
+                ) : (
+                  <>
+                  <p>Carregando formas de pagamento...</p>
+                  <PayPalScriptProvider  options={paypalOptions}  > 
+                    <ButtonWrapper currency={currency} showSpinner={true} />
+                  </PayPalScriptProvider>
+                  </>
+                )}                      
+               
               
             <div className={styles.paymentMethods}>
               
@@ -234,7 +270,7 @@ const Cart = () => {
             </>
           ) : ( 
             <>          
-            <button  onClick={() => setOpen(true)} className={styles.button}>
+            <button  onClick={() => setOpen(true)} className={styles.button} >
               Finalizar pedido
             </button>
             <button  onClick={() => { 
@@ -253,3 +289,5 @@ const Cart = () => {
 };
 
 export default Cart;
+
+

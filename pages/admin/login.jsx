@@ -16,6 +16,8 @@ const Login = () => {
         password,
       });
       router.push("/admin");
+      
+      
     } catch (err) {
       setError(true);
     }

@@ -14,8 +14,7 @@ import OrderDetail from "../components/OrderDetail";
 import React, { forwardRef } from 'react';
 
 const Cart = () => {
-  // LOCALSTORAGE
- 
+  
 
   const [homePg, setHomePg] = useState(false);
 
@@ -28,26 +27,57 @@ const Cart = () => {
   const dispatch = useDispatch();
   const router = useRouter();
 
+
+  // localStorage
+  const saveToLocalStorage = (data) => {
+    const cartData = JSON.stringify(data);
+    localStorage.setItem('cartData', cartData);
+  };
+  // localStorage
+  useEffect(() => {
+    const cartData = localStorage.getItem('cartData');
+    if (cartData) {
+      const parsedData = JSON.parse(cartData);
+      
+      // Aqui você pode usar parsedData para preencher o carrinho, se necessário
+      // Por exemplo, se parsedData é uma lista de produtos, você pode fazer algo como:
+      dispatch(preFillCart(parsedData)); // Supondo que você tenha uma action para preencher o carrinho
+      
+    }
+  }, [dispatch]);
+  
+
+
   const createOrder = async (data) => {
     try {
       const res = await axios.post("http://localhost:3000/api/orders", data);
       if (res.status === 201) {
         dispatch(reset());
         router.push(`/orders/${res.data._id}`);
+        
+        // localStorage
+        // Salvar no localStorage após o pedido ser criado com sucesso
+        saveToLocalStorage(data);
       }
     } catch (err) {
       console.error(err);
     }
   };
-  
   // Defina as opções do PayPalScriptProvider apenas uma vez fora do componente ButtonWrapper
   //'EH_u-GGUmBEvfrW09XAeBT83t2-M9AlnmvLwemA06KnKuEdd-ZXkOL3gnDTK0vby2blU4gkU9cbpd9UE',
   const paypalOptions = {
     
     components: "buttons, messages",
     currency: "USD",
-  
-    
+    "disable-funding": "p24" /* Desativar tipos de pagamentos ou:
+    Acesse a sua conta do PayPal.
+No painel de controle, vá para "Minha conta" ou "Configurações".
+Encontre a seção relacionada à integração do PayPal no seu site ou aplicativo.
+Dentro dessa seção, você deve encontrar opções de configuração para a caixa de pagamento do PayPal.
+Procure opções relacionadas à personalização da experiência de pagamento, como "Exibir opções de pagamento" ou "Opções de pagamento disponíveis".
+Geralmente, você pode desativar a opção de coleta de informações adicionais, como telefone e endereço, ajustando as configurações apropriadas.
+Salve as configurações após fazer as alterações.
+*/
     
   };
   if (!paypalOptions["client-id"]) {

@@ -8,17 +8,24 @@ import Featured from "../components/Featured";
 import PizzaList from "../components/PizzaList";
 import styles from "../styles/Home.module.css";
 
+
+
 export default function Home({ pizzaList, admin }) {
   const [close, setClose] = useState(true);
   return (
+    
+    
     <div className={styles.container}>
+      
       <Head>
-        <title>Pizza Restaurant in Newyork</title>
+        <title>Pizza Restaurant</title>
         <meta name="description" content="Best pizza shop in town" />
+        <meta httpEquiv="content-language" content="pt-BR" /> 
+        
         <link rel="icon" href="/favicon.ico" />
       </Head>
       <Featured />
-      {<AddButton setClose={setClose} />}
+      {admin===true ? <AddButton setClose={setClose} /> : null }
       <PizzaList pizzaList={pizzaList} />
       {!close && <Add setClose={setClose} />}
     </div>

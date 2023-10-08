@@ -69,15 +69,8 @@ const Cart = () => {
     
     components: "buttons, messages",
     currency: "USD",
-    "disable-funding": "p24" /* Desativar tipos de pagamentos ou:
-    Acesse a sua conta do PayPal.
-No painel de controle, vá para "Minha conta" ou "Configurações".
-Encontre a seção relacionada à integração do PayPal no seu site ou aplicativo.
-Dentro dessa seção, você deve encontrar opções de configuração para a caixa de pagamento do PayPal.
-Procure opções relacionadas à personalização da experiência de pagamento, como "Exibir opções de pagamento" ou "Opções de pagamento disponíveis".
-Geralmente, você pode desativar a opção de coleta de informações adicionais, como telefone e endereço, ajustando as configurações apropriadas.
-Salve as configurações após fazer as alterações.
-*/
+    "disable-funding": "p24" // Desativar tipos de pagamentos ou:
+
     
   };
   if (!paypalOptions["client-id"]) {
@@ -218,16 +211,14 @@ Salve as configurações após fazer as alterações.
             <b className={styles.totalTextTitle}>Total:</b>${cart.total}
           </div>
           
-          
+          onChange=
           {open && amount>0 ? (
             <>
-            
-            <PayPalScriptProvider  options={paypalOptions} >
-                
-              <ButtonWrapper currency={currency} showSpinner={false}  />  
-                  
-            </PayPalScriptProvider>
-            
+
+              <PayPalScriptProvider  options={paypalOptions}  >                  
+                <ButtonWrapper currency={currency} showSpinner={true}  />                      
+              </PayPalScriptProvider>
+              
             <div className={styles.paymentMethods}>
               
               <button                

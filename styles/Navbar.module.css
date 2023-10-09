@@ -38,8 +38,9 @@
 }
 
 .text:first-child {
-  font-size: 12px;
+  font-size: 18px;
   font-weight: 500;
+  margin-right: 10px;
 }
 
 .text:last-child {

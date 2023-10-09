@@ -60,11 +60,11 @@ const Add = ({ setClose }) => {
         </span>
         <h1>Add a new Pizza</h1>
         <div className={styles.item}>
-          <label className={styles.label}>Choose an image</label>
+          <label className={styles.label}>Escolha uma imagem</label>
           <input type="file" onChange={(e) => setFile(e.target.files[0])} />
         </div>
         <div className={styles.item}>
-          <label className={styles.label}>Title</label>
+          <label className={styles.label}>Título</label>
           <input
             className={styles.input}
             type="text"
@@ -80,7 +80,7 @@ const Add = ({ setClose }) => {
           />
         </div>
         <div className={styles.item}>
-          <label className={styles.label}>Prices</label>
+          <label className={styles.label}>Preço</label>
           <div className={styles.priceContainer}>
             <input
               className={`${styles.input} ${styles.inputSm}`}

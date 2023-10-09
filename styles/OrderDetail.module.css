@@ -51,3 +51,8 @@
   border-radius: 10px;
   cursor: pointer;
 }
+
+
+.emptyHighlight {
+  border: 2px solid blue;
+}

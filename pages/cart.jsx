@@ -12,7 +12,7 @@ import { useRouter } from "next/router";
 import { reset } from "../redux/cartSlice";
 import OrderDetail from "../components/OrderDetail";
 import React, { forwardRef } from 'react';
-import { preFillCart } from "redux"
+
 
 
 const Cart = () => {
@@ -30,23 +30,7 @@ const Cart = () => {
   const router = useRouter();
 
 
-  // localStorage
-  const saveToLocalStorage = (data) => {
-    const cartData = JSON.stringify(data);
-    localStorage.setItem('cartData', cartData);
-  };
-  // localStorage
-  useEffect(() => {
-    const cartData = localStorage.getItem('cartData');
-    if (cartData) {
-      const parsedData = JSON.parse(cartData);
-      
-      // Aqui você pode usar parsedData para preencher o carrinho, se necessário
-      // Por exemplo, se parsedData é uma lista de produtos, você pode fazer algo como:
-      dispatch(preFillCart(parsedData)); // Supondo que você tenha uma action para preencher o carrinho
-      
-    }
-  }, [dispatch]);
+
   
 
 
@@ -239,15 +223,21 @@ const Cart = () => {
           </div>
           
           
+          
+          
           {open && amount>0 ? (
             <>
               {isPayPalButtonLoaded ? (
+                
                 <PayPalScriptProvider  options={paypalOptions}  > 
                     <ButtonWrapper currency={currency} showSpinner={true} />
                   </PayPalScriptProvider>
                 ) : (
                   <>
-                  <p>Carregando formas de pagamento...</p>
+                  
+                  <p>Carregando <Image src="/img/loading-gif.gif" alt="Carregando" width={30} height={30} /></p>
+
+
                   <PayPalScriptProvider  options={paypalOptions}  > 
                     <ButtonWrapper currency={currency} showSpinner={true} />
                   </PayPalScriptProvider>

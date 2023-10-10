@@ -117,9 +117,75 @@ const OrderDetail = ({ total, createOrder }) => {
     const address = `${street}, ${number}, ${complement}, ${neighborhood}, ${city}`;
 
     // Cria o pedido
-    createOrder({ customer, address, total, method: 0, phoneNumber });
+    createOrder({ customer, address, total, method: 0, phoneNumber }); // DEIXAR phoneNumber AQUI!!! 
   };
 
+
+  // SALVAR LOCALSTORAGE
+
+   // Dados que você deseja salvar em localStorage
+   const modalData = {
+    customer,
+    cep,
+    street,
+    number,
+    complement,
+    neighborhood,
+    city,
+    phoneNumber,
+  };
+
+  //Funcao do botao salvar em favoritos.
+  function dadosUsuario() {
+    const minhaLista = localStorage.getItem("@dadosUsuario");
+    let dadosSalvoLocalStorage = JSON.parse(minhaLista) || [];
+  
+    // Verifica se os dados já existem na lista
+    const index = dadosSalvoLocalStorage.findIndex(
+      (dadosSalvo) => dadosSalvo.customer === modalData.customer
+    );
+  
+    if (index !== -1) {
+      // Atualiza os dados existentes no índice encontrado
+      dadosSalvoLocalStorage[index] = modalData;
+      localStorage.setItem("@dadosUsuario", JSON.stringify(dadosSalvoLocalStorage));
+      alert("Dados atualizados com sucesso");
+    } else {
+      // Caso contrário, insira novos dados
+      dadosSalvoLocalStorage.push(modalData);
+      localStorage.setItem("@dadosUsuario", JSON.stringify(dadosSalvoLocalStorage));
+      alert("Dados salvos com sucesso!");
+    }
+  }
+
+
+
+    // CARREGAR DADOS SALVOS NO LOCALSTORAGE E PREENCHER OS CAMPOS
+    const loadSavedData = () => {
+      const minhaLista = localStorage.getItem("@dadosUsuario");
+      const dadosSalvoLocalStorage = JSON.parse(minhaLista) || [];
+  
+      // Verifique se há dados salvos
+      if (dadosSalvoLocalStorage.length > 0) {
+        const lastSavedData = dadosSalvoLocalStorage[dadosSalvoLocalStorage.length - 1];
+  
+        // Preencha os campos do modal com os dados salvos
+        setCustomer(lastSavedData.customer);
+        setCep(lastSavedData.cep);
+        setStreet(lastSavedData.street);
+        setNumber(lastSavedData.number);
+        setComplement(lastSavedData.complement);
+        setNeighborhood(lastSavedData.neighborhood);
+        setCity(lastSavedData.city);
+        setPhoneNumber(lastSavedData.phoneNumber);
+      }
+    };
+  
+    // Carregue os dados salvos ao carregar o componente
+    useEffect(() => {
+      loadSavedData();
+    }, []);
+  
   return (
     <div className={styles.container}>  
       <div className={styles.wrapper}>
@@ -214,10 +280,15 @@ const OrderDetail = ({ total, createOrder }) => {
               router.push('/'); }} >
                 Voltar
               </button>
-            <button  className={styles.button} onClick={handleClick}>
-              Confirmar endereço
-            </button>
+              <button
+                  className={styles.button}
+                  onClick={() => {
+                    handleClick();
+                    dadosUsuario();  }}>
+                  Confirmar endereço
+              </button>
           </div>
+          
       </div>
       
     </div>

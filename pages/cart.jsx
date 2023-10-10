@@ -18,7 +18,7 @@ import React, { forwardRef } from 'react';
 const Cart = () => {
   
 
-  const [homePg, setHomePg] = useState(false);
+
 
   const cart = useSelector((state) => state.cart);
   const [open, setOpen] = useState(false);
@@ -28,6 +28,16 @@ const Cart = () => {
   const style = { layout: "vertical" };
   const dispatch = useDispatch();
   const router = useRouter();
+
+  const handleFinalizarPedido = () => {
+    // Primeiro, define cash como true
+    //setCash(true);
+
+    // Em seguida, depois de um pequeno atraso, define open como true
+    setTimeout(() => {
+      setOpen(true);
+    }, 1000); // 1000 milissegundos = 1 segundo (você pode ajustar o atraso conforme necessário)
+  };
 
 
 
@@ -41,9 +51,7 @@ const Cart = () => {
         dispatch(reset());
         router.push(`/orders/${res.data._id}`);
         
-        // localStorage
-        // Salvar no localStorage após o pedido ser criado com sucesso
-        saveToLocalStorage(data);
+   
       }
     } catch (err) {
       console.error(err);
@@ -260,7 +268,7 @@ const Cart = () => {
             </>
           ) : ( 
             <>          
-            <button  onClick={() => setOpen(true)} className={styles.button} >
+            <button onClick={() => handleFinalizarPedido()} className={styles.button}>
               Finalizar pedido
             </button>
             <button  onClick={() => { 
@@ -273,6 +281,7 @@ const Cart = () => {
           
         </div>
       </div>
+
       {cash && <OrderDetail total={cart.total} createOrder={createOrder} />}
     </div>
   );

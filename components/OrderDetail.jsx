@@ -1,6 +1,8 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 import styles from "../styles/OrderDetail.module.css";
+import { useRouter } from "next/router";
+
 
 const OrderDetail = ({ total, createOrder }) => {
   const [customer, setCustomer] = useState("");
@@ -11,8 +13,16 @@ const OrderDetail = ({ total, createOrder }) => {
   const [neighborhood, setNeighborhood] = useState("");
   const [city, setCity] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
+  const router = useRouter();
+
+  
 
   useEffect(() => {
+
+    
+
+
+    
     if (cep.length === 9) {
       // Remove o hífen antes de fazer a consulta à API
       const cepWithoutHyphen = cep.replace('-', '');
@@ -32,27 +42,31 @@ const OrderDetail = ({ total, createOrder }) => {
           console.error("Erro ao consultar CEP:", error);
           alert("Erro ao consultar CEP");
         });
+    } else {
+      // Se o CEP não tiver 9 caracteres, limpe os campos relacionados
+      setStreet("");
+      setNeighborhood("");
+      setCity("");
     }
   }, [cep]);
 
-  const formatCEP = (input) => {
-    // Remove todos os caracteres não numéricos e hífens
-    const numericInput = input.replace(/[^\d]/g, "");
   
-    // Adiciona hífen no lugar correto
-    let formattedCEP = "";
-    if (numericInput.length >= 5) {
-      formattedCEP = `${numericInput.slice(0, 5)}-${numericInput.slice(5, 8)}`;
-    } else {
-      formattedCEP = numericInput;
-    }
+    const formatCEP = (input) => {
+      // Remove todos os caracteres não numéricos
+      const numericInput = input.replace(/\D/g, "");
   
-    setCep(formattedCEP); // Atualiza o estado com o CEP formatado
-  };
-
-  const handleCEPChange = (e) => {
-    formatCEP(e.target.value); // Formata o CEP e atualiza o estado
-  };
+      // Adiciona hífen no lugar correto, se necessário
+      let formattedCEP = numericInput;
+      if (numericInput.length > 5) {
+        formattedCEP = `${numericInput.slice(0, 5)}-${numericInput.slice(5, 8)}`;
+      }
+  
+      setCep(formattedCEP);
+    };
+  
+    const handleCEPChange = (e) => {
+      formatCEP(e.target.value);
+    };
 
   const formatPhoneNumber = (input) => {
     // Remove todos os caracteres não numéricos
@@ -91,10 +105,13 @@ const OrderDetail = ({ total, createOrder }) => {
       //neighborhood.trim() === "" ||
       //city.trim() === "" ||
       phoneNumber.replace(/\D/g, "").length !== 11 // Verifique o comprimento aqui
+
+      
     ) {
       alert("Por favor, preencha todos os campos corretamente.");
       return;
     }
+    
 
     // Cria o endereço completo
     const address = `${street}, ${number}, ${complement}, ${neighborhood}, ${city}`;
@@ -104,8 +121,10 @@ const OrderDetail = ({ total, createOrder }) => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className={styles.container}>  
       <div className={styles.wrapper}>
+      
+           
         <h1 className={styles.title}>Verifique seu endereço</h1>
         <div className={styles.item}>
           <label className={styles.label}>Nome e sobrenomes</label>
@@ -120,7 +139,7 @@ const OrderDetail = ({ total, createOrder }) => {
         <div className={styles.item}>
           <label className={styles.label}>CEP</label>
           <input
-            placeholder="CEP (Preenchimento automático)"
+            placeholder="PREENCHIMENTO AUTOMÁTICO"
             type="text"
             className={`${styles.input} ${cep.trim() === "" ? styles.emptyHighlight : ''}`}
             onChange={handleCEPChange}
@@ -171,7 +190,7 @@ const OrderDetail = ({ total, createOrder }) => {
         </div>
         <div className={styles.item}>
           <label className={styles.label}>Cidade</label>
-          <input            
+          <input  disabled          
             placeholder="Cidade"
             type="text"
             className={styles.input}
@@ -183,17 +202,27 @@ const OrderDetail = ({ total, createOrder }) => {
           <label className={styles.label}>WhatsApp</label>
           <input
             type="text"
-            placeholder="(19) 9-2345-6789"
+            placeholder="(00) 0-0000-0000"
             className={`${styles.input} ${phoneNumber.trim() === "" ? styles.emptyHighlight : ''}`}
             onChange={handlePhoneNumberChange}
             value={phoneNumber}
           />
         </div>
-        <button className={styles.button} onClick={handleClick}>
-          Confirmar endereço
-        </button>
+          <div>
+            <button className={styles.closeButton} onClick={() => { 
+              // Redirecionar para a página home
+              router.push('/'); }} >
+                Voltar
+              </button>
+            <button  className={styles.button} onClick={handleClick}>
+              Confirmar endereço
+            </button>
+          </div>
       </div>
+      
     </div>
+    
+    
   );
 };
 

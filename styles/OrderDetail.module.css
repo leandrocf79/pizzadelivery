@@ -2,6 +2,7 @@
   width: 100%;
   height: 100vh;
   position: absolute;
+  margin-top: 99PX;
   top: 0;
   left: 0;
   display: flex;
@@ -55,4 +56,17 @@
 
 .emptyHighlight {
   border: 2px solid blue;
+}
+
+.closeButton {
+  margin-right: 55px;
+  
+  border: none;
+  background-color: teal;
+  color: white;
+  padding: 10px 20px;
+  font-weight: 500;
+  font-size: 16px;
+  border-radius: 10px;
+  cursor: pointer;
 }

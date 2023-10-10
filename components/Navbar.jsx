@@ -8,12 +8,12 @@ const Navbar = () => {
   return (
     <div className={styles.container}>
       <div className={styles.item}>
-        <div className={styles.callButton}>
-          <Image src="/img/telephone.png" alt="" width="32" height="32" />
-        </div>
+      <div className={styles.callButton}>
+        <Image src="/img/wa.jpg" alt="" width="100%" height="100%" />
+      </div>
         <div className={styles.texts}>
-          <div className={styles.text}>Pedir pelo WhatsApp!</div>
-          <div className={styles.text}>012 345 678</div>
+          <div className={styles.text}>Pedir menu WhatsApp!</div>
+          <div className={styles.text}>12 9-3456 5678</div>
         </div>
       </div>
       <div className={styles.item}>

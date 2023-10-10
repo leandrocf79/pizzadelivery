@@ -105,7 +105,7 @@ const Order = ({ order }) => {
             <b className={styles.totalTextTitle}>Total:</b>${order.total}
           </div>
           <button disabled className={styles.button}>
-            PAID
+            Obrigado
           </button>
         </div>
       </div>
